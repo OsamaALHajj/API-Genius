@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #484f58;
+}
+
+/* Monaco editor background fix */
+.monaco-editor,
+.monaco-editor .margin,
+.monaco-editor-background {
+  background-color: #0d1117 !important;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Prose dark mode override for docs */
+.prose {
+  --tw-prose-body: #d1d5db;
+  --tw-prose-headings: #f9fafb;
+  --tw-prose-links: #facc15;
+  --tw-prose-code: #facc15;
+  --tw-prose-pre-bg: #161b22;
+  --tw-prose-pre-code: #d1d5db;
+  --tw-prose-th-borders: #374151;
+  --tw-prose-td-borders: #1f2937;
+}
+
+.prose pre {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+}
+
+.prose code {
+  color: #facc15;
+  font-weight: 400;
+}
+
+.prose code::before,
+.prose code::after {
+  content: '';
+}
+
+.prose table {
+  width: 100%;
+}
+
+.prose th {
+  text-align: left;
+  color: #f9fafb;
+}
