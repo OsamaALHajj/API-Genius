@@ -1,74 +1,59 @@
-import { Router } from 'express';
-import axios, { type AxiosRequestConfig, type Method } from 'axios';
+import { Router, Request, Response } from "express";
+import axios from "axios";
 
 export const proxyRouter = Router();
 
-proxyRouter.post('/send', async (req, res) => {
+proxyRouter.post("/send", async (req: Request, res: Response) => {
+  const { method, url, headers = {}, body, params, timeout = 30000 } = req.body;
+
+  if (!method || !url) {
+    res.status(400).json({ success: false, error: "method and url required" });
+    return;
+  }
+
+  console.log(`📡 Proxy: ${method} ${url}`);
+  const start = Date.now();
+
   try {
-    const {
-      method,
-      url,
-      headers = {},
-      body,
-      params,
-      timeout = 30000
-    } = req.body;
-
-    if (!method || !url) {
-      res.status(400).json({
-        success: false,
-        error: 'method and url are required'
-      });
-      return;
-    }
-
-    const startTime = Date.now();
-
-    const config: AxiosRequestConfig = {
-      method: method.toLowerCase() as Method,
+    const resp = await axios({
+      method: method.toLowerCase(),
       url,
       headers,
       data: body,
       params,
       timeout,
-      validateStatus: () => true, // Don't throw on any status
-    };
+      validateStatus: () => true,
+    });
 
-    const response = await axios(config);
-    const endTime = Date.now();
-
-    // Calculate response size
-    let responseSize = 0;
+    const elapsed = Date.now() - start;
+    let size = 0;
     try {
-      responseSize = Buffer.byteLength(JSON.stringify(response.data), 'utf-8');
-    } catch {
-      responseSize = 0;
-    }
+      size = Buffer.byteLength(JSON.stringify(resp.data), "utf-8");
+    } catch {}
 
     res.json({
       success: true,
       data: {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers as Record<string, string>,
-        body: response.data,
-        time: endTime - startTime,
-        size: responseSize,
-      }
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+        body: resp.data,
+        time: elapsed,
+        size,
+      },
     });
-  } catch (error: any) {
-    const endTime = Date.now();
+  } catch (err: any) {
     res.json({
       success: false,
       data: {
         status: 0,
-        statusText: 'Network Error',
+        statusText: "Network Error",
         headers: {},
-        body: { error: error.message },
-        time: 0,
+        body: { error: err.message },
+        time: Date.now() - start,
         size: 0,
       },
-      error: error.message,
+      error: err.message,
     });
   }
 });

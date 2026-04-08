@@ -1,85 +1,69 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import type {
   ParsedAPI,
   ParsedEndpoint,
-  HistoryItem,
   ResponseData,
-  TestResult,
-  TestSummary,
-} from '../types';
+  HistoryItem,
+  TestResults,
+} from "../types";
 
-type ActiveTab = 'endpoints' | 'tests' | 'docs' | 'code';
+type Tab = "endpoints" | "tests" | "docs" | "code";
 
-interface ApiState {
-  // State
+interface Store {
   parsedApi: ParsedAPI | null;
   selectedEndpoint: ParsedEndpoint | null;
   isLoading: boolean;
-  activeTab: ActiveTab;
+  activeTab: Tab;
   testData: any;
   codeExamples: Record<string, string>;
-  testResults: { summary: TestSummary; results: TestResult[] } | null;
+  testResults: TestResults | null;
   documentation: string;
   responseData: ResponseData | null;
   history: HistoryItem[];
 
-  // Actions
   setParsedApi: (api: ParsedAPI) => void;
-  setSelectedEndpoint: (endpoint: ParsedEndpoint) => void;
-  setLoading: (loading: boolean) => void;
-  setActiveTab: (tab: ActiveTab) => void;
-  setTestData: (data: any) => void;
-  setCodeExamples: (examples: Record<string, string>) => void;
-  setTestResults: (results: { summary: TestSummary; results: TestResult[] } | null) => void;
-  setDocumentation: (doc: string) => void;
-  setResponseData: (data: ResponseData | null) => void;
-  addToHistory: (item: HistoryItem) => void;
-  reset: () => void;
+  setSelectedEndpoint: (ep: ParsedEndpoint) => void;
+  setLoading: (v: boolean) => void;
+  setActiveTab: (t: Tab) => void;
+  setTestData: (d: any) => void;
+  setCodeExamples: (e: Record<string, string>) => void;
+  setTestResults: (r: TestResults | null) => void;
+  setDocumentation: (d: string) => void;
+  setResponseData: (d: ResponseData | null) => void;
+  addToHistory: (h: HistoryItem) => void;
 }
 
-const initialState = {
+export const useApiStore = create<Store>((set) => ({
   parsedApi: null,
   selectedEndpoint: null,
   isLoading: false,
-  activeTab: 'endpoints' as ActiveTab,
+  activeTab: "endpoints",
   testData: null,
   codeExamples: {},
   testResults: null,
-  documentation: '',
+  documentation: "",
   responseData: null,
   history: [],
-};
 
-export const useApiStore = create<ApiState>((set) => ({
-  ...initialState,
-
-  setParsedApi: (api) => set({
-    parsedApi: api,
-    selectedEndpoint: api.endpoints[0] || null,
-    // Reset generated data when new API is loaded
-    testData: null,
-    codeExamples: {},
-    testResults: null,
-    documentation: '',
-    responseData: null,
-  }),
-  setSelectedEndpoint: (endpoint) => set({
-    selectedEndpoint: endpoint,
-    // Reset endpoint-specific data
-    testData: null,
-    codeExamples: {},
-    responseData: null,
-  }),
-  setLoading: (loading) => set({ isLoading: loading }),
-  setActiveTab: (tab) => set({ activeTab: tab }),
-  setTestData: (data) => set({ testData: data }),
-  setCodeExamples: (examples) => set({ codeExamples: examples }),
-  setTestResults: (results) => set({ testResults: results }),
-  setDocumentation: (doc) => set({ documentation: doc }),
-  setResponseData: (data) => set({ responseData: data }),
-  addToHistory: (item) =>
-    set((state) => ({
-      history: [item, ...state.history].slice(0, 100),
-    })),
-  reset: () => set(initialState),
+  setParsedApi: (api) =>
+    set({
+      parsedApi: api,
+      selectedEndpoint: api.endpoints[0] || null,
+      testData: null,
+      codeExamples: {},
+      testResults: null,
+      documentation: "",
+      responseData: null,
+    }),
+  setSelectedEndpoint: (ep) =>
+    set({ selectedEndpoint: ep, testData: null, codeExamples: {}, responseData: null }),
+  setLoading: (v) => set({ isLoading: v }),
+  setActiveTab: (t) => set({ activeTab: t }),
+  setTestData: (d) => set({ testData: d }),
+  setCodeExamples: (e) => set({ codeExamples: e }),
+  setTestResults: (r) => set({ testResults: r }),
+  setDocumentation: (d) => set({ documentation: d }),
+  setResponseData: (d) => set({ responseData: d }),
+  addToHistory: (h) =>
+    set((s) => ({ history: [h, ...s.history].slice(0, 100) })),
 }));

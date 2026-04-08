@@ -1,44 +1,74 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { createServer } from 'http';
-import { WebSocketServer, WebSocket } from 'ws';
-import { apiParserRouter } from './routes/api-parser.js';
-import { aiGenerateRouter } from './routes/ai-generate.js';
-import { proxyRouter } from './routes/proxy.js';
-import { testsRouter } from './routes/tests.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { createServer } from "http";
+import { apiParserRouter } from "./routes/api-parser";
+import { aiGenerateRouter } from "./routes/ai-generate";
+import { proxyRouter } from "./routes/proxy";
+import { testsRouter } from "./routes/tests";
 
 dotenv.config();
 
 const app = express();
 const server = createServer(app);
-const wss = new WebSocketServer({ server, path: '/ws' });
 
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+  })
+);
+
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 
 // Health check
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get("/health", (_req, res) => {
+  const provider = process.env.GEMINI_API_KEY
+    ? "Gemini (FREE)"
+    : process.env.GROQ_API_KEY
+      ? "Groq (FREE)"
+      : process.env.OPENAI_API_KEY
+        ? "OpenAI"
+        : "Local (No AI key)";
+
+  res.json({
+    status: "ok",
+    aiProvider: provider,
+    timestamp: new Date().toISOString(),
+  });
 });
 
-// Routes
-app.use('/api/parse', apiParserRouter);
-app.use('/api/ai', aiGenerateRouter);
-app.use('/api/proxy', proxyRouter);
-app.use('/api/tests', testsRouter);
+app.use("/api/parse", apiParserRouter);
+app.use("/api/ai", aiGenerateRouter);
+app.use("/api/proxy", proxyRouter);
+app.use("/api/tests", testsRouter);
 
-// WebSocket for live updates
-wss.on('connection', (ws: WebSocket) => {
-  console.log('🔌 Client connected');
-  ws.send(JSON.stringify({ type: 'connected' }));
-  ws.on('close', () => console.log('🔌 Client disconnected'));
-});
+// Error handler
+app.use(
+  (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    console.error("❌ Error:", err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+);
 
-// Export for use in services
-export { wss };
+const PORT = Number(process.env.PORT) || 3001;
+server.listen(PORT, "0.0.0.0", () => {
+  const provider = process.env.GEMINI_API_KEY
+    ? "🟢 Gemini (FREE)"
+    : process.env.GROQ_API_KEY
+      ? "🟢 Groq (FREE)"
+      : process.env.OPENAI_API_KEY
+        ? "🟡 OpenAI"
+        : "⚪ Local (No AI - still works!)";
 
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-  console.log(`🚀 API Genius Backend running on http://localhost:${PORT}`);
+  console.log("");
+  console.log("=".repeat(55));
+  console.log(`  ⚡ API Genius Backend running!`);
+  console.log(`  📡 http://localhost:${PORT}`);
+  console.log(`  🏥 http://localhost:${PORT}/health`);
+  console.log(`  🤖 AI: ${provider}`);
+  console.log("=".repeat(55));
+  console.log("");
 });

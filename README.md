@@ -4,80 +4,102 @@
 
 ### AI-Powered API Testing Tool
 
-**Automatically generate test data, code examples, documentation, and security tests from any OpenAPI/Swagger spec — powered by GPT-4o.**
+Automatically generate test data, code examples, documentation, and security tests
+from any OpenAPI/Swagger spec — works **with or without** AI.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o-412991?logo=openai&logoColor=white)](https://openai.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-[Demo](#-demo) • [Features](#-features) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
-
----
-
-<img src="docs/screenshots/hero-demo.gif" alt="API Genius Demo" width="800"/>
+**[Features](#-features) • [Quick Start](#-quick-start) • [AI Providers](#-ai-providers) • [Usage Guide](#-usage-guide) • [Tech Stack](#-tech-stack) • [Contributing](#-contributing)**
 
 </div>
 
+---
+
 ## 🎯 Why API Genius?
 
-Testing APIs shouldn't be tedious. Traditional tools require you to manually write test data, create code snippets, and build documentation from scratch. **API Genius** changes that by leveraging AI to do the heavy lifting.
+Testing APIs shouldn't be tedious. Traditional tools require you to manually write
+test data, create code snippets, and build documentation from scratch.
 
-Simply point it at any OpenAPI/Swagger specification URL, and within seconds you'll have:
+**API Genius changes that.**
 
-- Intelligent test data covering happy paths, edge cases, and security scenarios
-- Ready-to-use code examples in **14 programming languages**
-- Complete, well-structured API documentation
-- Automated security vulnerability detection
-- Performance insights and response analysis
+Simply paste any OpenAPI/Swagger spec URL and within seconds you'll have:
+
+- 🧪 **Intelligent test data** — happy paths, edge cases, and security scenarios
+- 💻 **Code examples** in 12+ programming languages
+- 📝 **Complete API documentation** — auto-generated Markdown
+- 🔒 **Security vulnerability detection** — SQL injection, XSS, auth bypass
+- ⚡ **Performance insights** — response time tracking and analysis
+
+### 🆓 Works Without Any API Key!
+
+API Genius includes a **smart local generator** that produces test data, code
+examples, documentation, and tests **without any AI service**. Add a free
+Gemini or Groq key to unlock AI-powered generation.
+
+| Mode | Cost | Quality | Setup |
+|------|------|---------|-------|
+| ⚪ **Local** (No AI) | Free forever | Good | Zero config |
+| 🟢 **Google Gemini** | Free tier | Excellent | 1 minute |
+| 🟢 **Groq** | Free tier | Excellent | 1 minute |
+| 🟡 **OpenAI** | Paid | Excellent | Requires billing |
 
 ---
 
 ## ✨ Features
 
 ### 📡 Smart Endpoint Discovery
-Automatically parses and discovers all endpoints from any OpenAPI 2.0/3.0/3.1 or Swagger specification. Just paste a URL and let API Genius do the rest.
+
+Automatically parses all endpoints from any OpenAPI 2.0 / 3.0 or Swagger spec.
+Just paste a URL — API Genius discovers endpoints, parameters, request bodies,
+response schemas, and authentication requirements.
 
 ### 🧪 AI-Generated Test Data
-GPT-4o generates contextually relevant test data for every endpoint, including:
-- **Happy path** — Valid requests that should succeed
-- **Edge cases** — Boundary values, empty fields, special characters
-- **Security tests** — SQL injection, XSS, authentication bypass attempts
 
-### 💻 Code Examples in 14 Languages
-Instantly generate production-ready code snippets in:
+Generates contextually relevant test data for every endpoint:
+
+| Category | Description |
+|----------|-------------|
+| **Happy Path** | Valid requests that should succeed |
+| **Edge Cases** | Boundary values, empty fields, special characters |
+| **Error Cases** | Invalid data to test error handling |
+| **Security Tests** | SQL injection, XSS, authentication bypass attempts |
+| **Boundary Values** | Min/max integers, long strings, negative numbers |
+
+### 💻 Code Examples in 12 Languages
+
+Instantly generate production-ready code snippets:
 
 | | | | |
 |---|---|---|---|
 | JavaScript (Fetch) | Python (Requests) | Java (HttpClient) | C# (HttpClient) |
-| TypeScript (Axios) | Go (net/http) | Ruby (Net::HTTP) | PHP (cURL) |
-| Rust (reqwest) | Swift (URLSession) | Kotlin (OkHttp) | Dart (http) |
-| cURL | PowerShell | | |
+| JavaScript (Axios) | Go (net/http) | Ruby (Net::HTTP) | PHP (Guzzle) |
+| cURL | Swift (URLSession) | Kotlin (OkHttp) | Dart (http) |
 
 ### 📝 Documentation Generation
-Produce clean, comprehensive API documentation automatically — complete with parameter descriptions, response schemas, example payloads, and authentication details.
+
+Produce clean, comprehensive API documentation automatically — with parameter
+tables, response schemas, example payloads, and authentication details.
+Export as Markdown or copy to clipboard.
 
 ### 🔒 Security Testing
-AI-powered security analysis that proactively identifies potential vulnerabilities, including injection attacks, broken authentication, and data exposure risks.
+
+AI-powered security analysis that identifies potential vulnerabilities including
+injection attacks, broken authentication, and data exposure risks.
 
 ### ⚡ Response Analysis
-Real-time response inspection with status codes, headers, body parsing, response time tracking, and performance recommendations.
 
----
+Real-time response inspection with status codes, headers, body parsing,
+response time tracking, and size calculation.
 
-## 📸 Demo
+### 🧪 Test Runner
 
-<div align="center">
-
-| Endpoint Discovery | AI Test Generation | Code Examples |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/endpoints.png" width="280"/> | <img src="docs/screenshots/test-gen.png" width="280"/> | <img src="docs/screenshots/code-examples.png" width="280"/> |
-
-</div>
-
-> 💡 **Live Demo**: [Coming Soon](#) — Star the repo to get notified!
+Run automated tests directly from the browser. Quick tests check endpoint
+availability, response time, and error handling. Generate full Jest, Mocha,
+and pytest test suites.
 
 ---
 
@@ -85,12 +107,12 @@ Real-time response inspection with status codes, headers, body parsing, response
 
 ### Prerequisites
 
-- **Node.js** 18 or higher — [Download](https://nodejs.org/)
-- **OpenAI API Key** — [Get one here](https://platform.openai.com/api-keys)
+- **Node.js 18+** — [Download here](https://nodejs.org/)
+- **AI Key (Optional)** — Works without one! See [AI Providers](#-ai-providers)
 
 ### Installation
 
-**1. Clone the repository**
+#### 1. Clone the repository
 
 ```bash
 git clone https://github.com/your-username/api-genius.git

@@ -1,13 +1,13 @@
-import { Router } from 'express';
-import axios from 'axios';
+import { Router, Request, Response } from "express";
+import axios from "axios";
 
 export const testsRouter = Router();
 
 // ===== Types =====
 interface TestAssertion {
-  type: 'status' | 'body' | 'header' | 'time';
+  type: "status" | "body" | "header" | "time";
   path?: string;
-  operator: 'eq' | 'ne' | 'gt' | 'lt' | 'contains' | 'exists';
+  operator: "eq" | "ne" | "gt" | "lt" | "contains" | "exists";
   value: any;
 }
 
@@ -21,95 +21,84 @@ interface TestCase {
   assertions?: TestAssertion[];
 }
 
-interface AssertionResult {
-  type: string;
-  expected: any;
-  actual: any;
-  passed: boolean;
-  message: string;
-}
-
-// ===== Helper: standalone function (NOT `this.`) =====
+// ===== Helpers (standalone functions - NOT this.) =====
 function getNestedValue(obj: any, path: string): any {
-  return path.split('.').reduce((current, key) => {
-    if (current === null || current === undefined) return undefined;
-    return current[key];
+  return path.split(".").reduce((cur, key) => {
+    if (cur == null) return undefined;
+    return cur[key];
   }, obj);
 }
 
 function runAssertion(
-  assertion: TestAssertion,
-  response: { status: number; headers: any; data: any },
-  responseTime: number
-): AssertionResult {
+  a: TestAssertion,
+  resp: { status: number; headers: any; data: any },
+  time: number
+) {
   let actual: any;
-  let expected = assertion.value;
-
-  switch (assertion.type) {
-    case 'status':
-      actual = response.status;
+  switch (a.type) {
+    case "status":
+      actual = resp.status;
       break;
-    case 'body':
-      actual = assertion.path ? getNestedValue(response.data, assertion.path) : response.data;
+    case "body":
+      actual = a.path ? getNestedValue(resp.data, a.path) : resp.data;
       break;
-    case 'header':
-      actual = assertion.path ? response.headers[assertion.path.toLowerCase()] : response.headers;
+    case "header":
+      actual = a.path ? resp.headers[a.path.toLowerCase()] : resp.headers;
       break;
-    case 'time':
-      actual = responseTime;
+    case "time":
+      actual = time;
       break;
-    default:
-      actual = undefined;
   }
 
   let passed = false;
-  switch (assertion.operator) {
-    case 'eq':
-      passed = actual === expected;
+  switch (a.operator) {
+    case "eq":
+      passed = actual === a.value;
       break;
-    case 'ne':
-      passed = actual !== expected;
+    case "ne":
+      passed = actual !== a.value;
       break;
-    case 'gt':
-      passed = actual > expected;
+    case "gt":
+      passed = actual > a.value;
       break;
-    case 'lt':
-      passed = actual < expected;
+    case "lt":
+      passed = actual < a.value;
       break;
-    case 'contains':
-      passed = typeof actual === 'string'
-        ? actual.includes(expected)
-        : Array.isArray(actual) ? actual.includes(expected) : false;
+    case "contains":
+      passed = String(actual).includes(String(a.value));
       break;
-    case 'exists':
-      passed = actual !== undefined && actual !== null;
+    case "exists":
+      passed = actual != null;
       break;
   }
 
   return {
-    type: assertion.type,
-    expected,
+    type: a.type,
+    expected: a.value,
     actual,
     passed,
     message: passed
-      ? `✅ ${assertion.type}${assertion.path ? '.' + assertion.path : ''} ${assertion.operator} ${expected}`
-      : `❌ ${assertion.type}${assertion.path ? '.' + assertion.path : ''}: expected ${assertion.operator} ${expected}, got ${actual}`
+      ? `✅ ${a.type}${a.path ? "." + a.path : ""} ${a.operator} ${a.value}`
+      : `❌ ${a.type}${a.path ? "." + a.path : ""}: expected ${a.operator} ${a.value}, got ${actual}`,
   };
 }
 
 // ===== Route =====
-testsRouter.post('/run', async (req, res) => {
-  const { tests, baseUrl }: { tests: TestCase[]; baseUrl: string } = req.body;
+testsRouter.post("/run", async (req: Request, res: Response) => {
+  const { tests, baseUrl } = req.body as {
+    tests: TestCase[];
+    baseUrl: string;
+  };
 
   if (!tests || !Array.isArray(tests)) {
-    res.status(400).json({ success: false, error: 'tests array is required' });
+    res.status(400).json({ success: false, error: "tests array required" });
     return;
   }
 
   const results: any[] = [];
 
   for (const test of tests) {
-    const startTime = Date.now();
+    const start = Date.now();
     const result: any = {
       name: test.name,
       passed: true,
@@ -121,11 +110,11 @@ testsRouter.post('/run', async (req, res) => {
     };
 
     try {
-      const fullUrl = test.url.startsWith('http')
+      const fullUrl = test.url.startsWith("http")
         ? test.url
         : `${baseUrl}${test.url}`;
 
-      const response = await axios({
+      const resp = await axios({
         method: test.method.toLowerCase() as any,
         url: fullUrl,
         headers: test.headers,
@@ -134,52 +123,43 @@ testsRouter.post('/run', async (req, res) => {
         validateStatus: () => true,
       });
 
-      result.time = Date.now() - startTime;
-      result.status = response.status;
+      result.time = Date.now() - start;
+      result.status = resp.status;
+      result.responseBody = resp.data;
 
-      // Truncate large response bodies
-      try {
-        const bodyStr = JSON.stringify(response.data);
-        result.responseBody = bodyStr.length > 5000
-          ? JSON.parse(bodyStr.substring(0, 5000) + '..."')
-          : response.data;
-      } catch {
-        result.responseBody = response.data;
-      }
-
-      // Run custom assertions
-      if (test.assertions && Array.isArray(test.assertions)) {
-        for (const assertion of test.assertions) {
-          const assertResult = runAssertion(assertion, response, result.time);
-          result.assertions.push(assertResult);
-          if (!assertResult.passed) result.passed = false;
+      // Run assertions
+      if (Array.isArray(test.assertions)) {
+        for (const a of test.assertions) {
+          const ar = runAssertion(a, resp, result.time);
+          result.assertions.push(ar);
+          if (!ar.passed) result.passed = false;
         }
       }
 
-      // Default status assertion
-      if (test.expectedStatus) {
-        const statusPassed = response.status === test.expectedStatus;
+      // Default status check
+      if (test.expectedStatus != null) {
+        const ok = resp.status === test.expectedStatus;
         result.assertions.push({
-          type: 'status',
+          type: "status",
           expected: test.expectedStatus,
-          actual: response.status,
-          passed: statusPassed,
-          message: statusPassed
-            ? `✅ Status ${response.status} matches expected`
-            : `❌ Expected status ${test.expectedStatus}, got ${response.status}`
+          actual: resp.status,
+          passed: ok,
+          message: ok
+            ? `✅ Status ${resp.status} matches`
+            : `❌ Expected ${test.expectedStatus}, got ${resp.status}`,
         });
-        if (!statusPassed) result.passed = false;
+        if (!ok) result.passed = false;
       }
-    } catch (error: any) {
+    } catch (err: any) {
       result.passed = false;
-      result.error = error.message;
-      result.time = Date.now() - startTime;
+      result.error = err.message;
+      result.time = Date.now() - start;
     }
 
     results.push(result);
   }
 
-  const passed = results.filter(r => r.passed).length;
+  const passed = results.filter((r) => r.passed).length;
   const total = results.length;
 
   res.json({
@@ -188,8 +168,8 @@ testsRouter.post('/run', async (req, res) => {
       total,
       passed,
       failed: total - passed,
-      passRate: total > 0 ? `${((passed / total) * 100).toFixed(1)}%` : '0%',
-      totalTime: results.reduce((sum, r) => sum + r.time, 0),
+      passRate: total > 0 ? `${((passed / total) * 100).toFixed(1)}%` : "0%",
+      totalTime: results.reduce((s, r) => s + r.time, 0),
     },
     results,
   });
