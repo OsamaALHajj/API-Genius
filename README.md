@@ -18,7 +18,57 @@ from any OpenAPI/Swagger spec — works **with or without** AI.
 </div>
 
 ---
+<div align="center">
 
+## 📊 Project Statistics
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://img.shields.io/github/downloads/OsamaALHajj/API-Genius/total?style=for-the-badge&color=brightgreen&logo=github&logoColor=white" />
+      <br><b>📥 Total Downloads</b>
+    </td>
+    <td align="center">
+      <img src="https://komarev.com/ghpvc/?username=OsamaALHajj&style=for-the-badge&color=blueviolet" />
+      <br><b>👁️ Profile Views</b>
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/github/stars/OsamaALHajj/API-Genius?style=for-the-badge&color=yellow&logo=github&logoColor=white" />
+      <br><b>⭐ Stars</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://img.shields.io/github/forks/OsamaALHajj/API-Genius?style=for-the-badge&color=blue&logo=github&logoColor=white" />
+      <br><b>🍴 Forks</b>
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/github/issues/OsamaALHajj/API-Genius?style=for-the-badge&color=red&logo=github&logoColor=white" />
+      <br><b>🐛 Open Issues</b>
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/github/last-commit/OsamaALHajj/API-Genius?style=for-the-badge&color=orange&logo=git&logoColor=white" />
+      <br><b>🕒 Last Commit</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://img.shields.io/github/repo-size/OsamaALHajj/API-Genius?style=for-the-badge&color=purple&logo=github&logoColor=white" />
+      <br><b>💾 Repo Size</b>
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/github/languages/top/OsamaALHajj/API-Genius?style=for-the-badge&color=informational&logo=typescript&logoColor=white" />
+      <br><b>🔤 Top Language</b>
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/github/contributors/OsamaALHajj/API-Genius?style=for-the-badge&color=teal&logo=github&logoColor=white" />
+      <br><b>👥 Contributors</b>
+    </td>
+  </tr>
+</table>
+
+</div>
+----
 ## 🎯 Why API Genius?
 
 Testing APIs shouldn't be tedious. Traditional tools require you to manually write
