@@ -22,8 +22,8 @@ from any OpenAPI/Swagger spec — works **with or without** AI.
 <table>
   <tr>
     <td align="center">
-      <img src="https://img.shields.io/github/languages/code-size/OsamaALHajj/API-Genius?style=for-the-badge&color=brightgreen&logo=github&logoColor=white" />
-      <br><b>📦 Code Size</b>
+      <img src="https://img.shields.io/github/downloads/OsamaALHajj/API-Genius/total?style=for-the-badge&color=brightgreen&logo=github&logoColor=white" />
+      <br><b>📥 Total Downloads</b>
     </td>
     <td align="center">
       <img src="https://img.shields.io/github/watchers/OsamaALHajj/API-Genius?style=for-the-badge&color=blueviolet&logo=github&logoColor=white" />
