@@ -15,9 +15,6 @@ from any OpenAPI/Swagger spec — works **with or without** AI.
 
 **[Features](#-features) • [Quick Start](#-quick-start) • [AI Providers](#-ai-providers) • [Usage Guide](#-usage-guide) • [Tech Stack](#-tech-stack) • [Contributing](#-contributing)**
 
-</div>
-
----
 <div align="center">
 
 ## 📊 Project Statistics
@@ -25,12 +22,12 @@ from any OpenAPI/Swagger spec — works **with or without** AI.
 <table>
   <tr>
     <td align="center">
-      <img src="https://img.shields.io/github/downloads/OsamaALHajj/API-Genius/total?style=for-the-badge&color=brightgreen&logo=github&logoColor=white" />
-      <br><b>📥 Total Downloads</b>
+      <img src="https://img.shields.io/github/languages/code-size/OsamaALHajj/API-Genius?style=for-the-badge&color=brightgreen&logo=github&logoColor=white" />
+      <br><b>📦 Code Size</b>
     </td>
     <td align="center">
-      <img src="https://komarev.com/ghpvc/?username=OsamaALHajj&style=for-the-badge&color=blueviolet" />
-      <br><b>👁️ Profile Views</b>
+      <img src="https://img.shields.io/github/watchers/OsamaALHajj/API-Genius?style=for-the-badge&color=blueviolet&logo=github&logoColor=white" />
+      <br><b>👁️ Watchers</b>
     </td>
     <td align="center">
       <img src="https://img.shields.io/github/stars/OsamaALHajj/API-Genius?style=for-the-badge&color=yellow&logo=github&logoColor=white" />
@@ -68,6 +65,7 @@ from any OpenAPI/Swagger spec — works **with or without** AI.
 </table>
 
 </div>
+
 ----
 ## 🎯 Why API Genius?
 
